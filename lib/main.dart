@@ -22,7 +22,7 @@ class _App extends StatelessWidget {
               hintText: 'Enter your email',
               onChanged: (String value) {},
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             CustomTextFormField(
               hintText: 'Enter your password',
               obscureText: true,
