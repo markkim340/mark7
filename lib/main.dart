@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mark7/common/component/custom_text_form_field.dart';
+import 'package:mark7/user/view/login_screen.dart';
 
 void main() {
   runApp(_App());
@@ -12,25 +13,11 @@ class _App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomTextFormField(
-              hintText: 'Enter your email',
-              onChanged: (String value) {},
-            ),
-            const SizedBox(height: 10),
-            CustomTextFormField(
-              hintText: 'Enter your password',
-              obscureText: true,
-              onChanged: (String value) {},
-            ),
-          ],
-        ),
+      theme: ThemeData(
+        fontFamily: 'NotoSans',
       ),
+      debugShowCheckedModeBanner: false,
+      home: const LoginScreen(),
     );
   }
 }
