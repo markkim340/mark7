@@ -9,15 +9,33 @@ class RootTab extends StatefulWidget {
   State<RootTab> createState() => _RootTabState();
 }
 
-class _RootTabState extends State<RootTab> {
+class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
+  late TabController controller;
   int index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TabController(length: 4, vsync: this);
+    controller.addListener(tapListener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(tapListener);
+    controller.dispose();
+    super.dispose();
+  }
+
+  void tapListener() {
+    setState(() {
+      index = controller.index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      child: Center(
-        child: Text('Root Tab'),
-      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -52,9 +70,7 @@ class _RootTabState extends State<RootTab> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
             onTap: (int index) {
-              setState(() {
-                this.index = index;
-              });
+              controller.animateTo(index);
             },
             currentIndex: index,
             elevation: 0,
@@ -78,6 +94,16 @@ class _RootTabState extends State<RootTab> {
             ],
           ),
         ),
+      ),
+      child: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: controller,
+        children: const [
+          Center(child: Text('Home Tab')),
+          Center(child: Text('Search Tab')),
+          Center(child: Text('Profile Tab')),
+          Center(child: Text('Settings Tab')),
+        ],
       ),
     );
   }
