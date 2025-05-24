@@ -1,13 +1,34 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mark7/common/component/custom_text_form_field.dart';
 import 'package:mark7/common/const/colors.dart';
+import 'package:mark7/common/const/data.dart';
 import 'package:mark7/common/layout/default_layout.dart';
+import 'package:mark7/common/view/root_tab.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String username = 'test@codefactory.ai';
+  String password = '';
+
+  @override
   Widget build(BuildContext context) {
+    final dio = Dio();
+
+    // localhost
+    const emulatorIp = '10.0.0.2:3000';
+    const simulatorIp = '127.0.0.1:3000';
+
+    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+
     return DefaultLayout(
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -30,17 +51,50 @@ class LoginScreen extends StatelessWidget {
                 ),
                 CustomTextFormField(
                   hintText: 'Enter your email',
-                  onChanged: (String value) {},
+                  initialValue: username,
+                  onChanged: (String value) {
+                    username = value;
+                  },
                 ),
                 const SizedBox(height: 10),
                 CustomTextFormField(
                   hintText: 'Enter your password',
                   obscureText: true,
-                  onChanged: (String value) {},
+                  onChanged: (String value) {
+                    password = value;
+                  },
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    // ID:PASSWORD
+                    final rawString = '$username:$password';
+
+                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+                    String token = stringToBase64.encode(rawString);
+
+                    final resp = await dio.post(
+                      'http://$ip/auth/login',
+                      options: Options(
+                        headers: {'Authorization': 'Basic $token'},
+                      ),
+                    );
+
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+
+                    await storage.write(
+                        key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(
+                        key: ACCESS_TOKEN_KEY, value: accessToken);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const RootTab(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
