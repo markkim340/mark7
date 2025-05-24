@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Primary color for the app
-const PRIMARY_COLOR = Color(0xFF22A45D);
+final PRIMARY_COLOR = Colors.blue[400];
 // Text color for the app
 const BODY_TEXT_COLOR = Color(0xFF868686);
 // Text field Background color

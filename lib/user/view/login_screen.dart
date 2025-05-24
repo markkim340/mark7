@@ -112,12 +112,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text("sign up",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: PRIMARY_COLOR,
-                      )),
+                  child: Text(
+                    "sign up",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: PRIMARY_COLOR,
+                    ),
+                  ),
                 ),
               ],
             ),
