@@ -18,7 +18,7 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(title: 'Product List'),
+      appBar: renderAppBar(title: title),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
     );
@@ -42,6 +42,7 @@ AppBar? renderAppBar({
       centerTitle: true,
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
+      leading: null,
     );
   }
 }
