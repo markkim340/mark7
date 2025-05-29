@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:mark7/common/const/colors.dart';
+import 'package:mark7/restaurant/model/restaurant_detail_model.dart';
 
 class ProductCard extends StatelessWidget {
-  final String id;
+  final Image image;
+  final String name;
+  final String detail;
+  final int price;
 
-  const ProductCard({super.key, required this.id});
+  const ProductCard({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.detail,
+    required this.price,
+  });
+
+  factory ProductCard.fromModel({required RestaurantProductModel model}) {
+    return ProductCard(
+      image: Image.network(
+        model.imgUrl,
+        width: 110,
+        height: 110,
+        fit: BoxFit.cover,
+      ),
+      name: model.name,
+      detail: model.detail,
+      price: model.price,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +37,7 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
-              'asset/img/misc/sample.jpg',
-              width: 110,
-              height: 110,
-              fit: BoxFit.cover,
-            ),
+            child: image,
           ),
           const SizedBox(width: 16.0),
           Expanded(
@@ -27,23 +46,23 @@ class ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "떡뽂기",
-                  style: TextStyle(
+                  name,
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  "이것은 떡볶이입니다. 맛있어요!\n떡볶이 떡과 어묵이 들어가요.",
+                  detail,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: BODY_TEXT_COLOR,
                     fontSize: 14.0,
                   ),
                 ),
                 Text(
-                  "10000won",
+                  "\${price}",
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     color: PRIMARY_COLOR,
