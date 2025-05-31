@@ -45,9 +45,49 @@ class CustomInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Handle errors globally
-    print('Error occurred: ${err.message}');
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    log('[Err]: ${err.requestOptions.method} ${err.requestOptions.uri}');
+
+    final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
+    if (refreshToken == null) {
+      return handler.reject(err);
+    }
+
+    // when 401 error occurs, try to refresh token
+    final isStatus401 = err.response?.statusCode == 401;
+    final isPathRefresh = err.requestOptions.path == '/auth/refresh';
+
+    // If the error is 401 and the request is not for refreshing the token,
+    if (isStatus401 && !isPathRefresh) {
+      final dio = Dio();
+      try {
+        final resp = await dio.post(
+          'http://$ip/auth/refresh',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $refreshToken',
+            },
+          ),
+        );
+
+        final accessToken = resp.data['accessToken'];
+        final options = err.requestOptions;
+
+        // Change New Access Token
+        options.headers.addAll({
+          'Authorization': 'Bearer $accessToken',
+        });
+
+        await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+
+        // Retry Fetch
+        final response = await dio.fetch(options);
+        return handler.resolve(response);
+      } on DioException catch (e) {
+        return handler.reject(e);
+      }
+    }
+
     super.onError(err, handler);
   }
 }
