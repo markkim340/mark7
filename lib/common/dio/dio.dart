@@ -39,8 +39,7 @@ class CustomInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    // Add custom logic after receiving a response
-    print('Response from: ${response.requestOptions.uri}');
+    log('[Res]: ${response.requestOptions.method} ${response.requestOptions.uri}');
     super.onResponse(response, handler);
   }
 
