@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mark7/common/model/cursor_pagination_model.dart';
 import 'package:mark7/restaurant/component/restaurant_card.dart';
-import 'package:mark7/restaurant/model/restaurant_model.dart';
-import 'package:mark7/restaurant/repository/restaurant_repository.dart';
+import 'package:mark7/restaurant/provider/restaurant_provider.dart';
 import 'package:mark7/restaurant/view/restaurant_detail_screen.dart';
 
 class RestaurantScreen extends ConsumerWidget {
@@ -11,43 +9,35 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: FutureBuilder<CursorPagination<RestaurantModel>>(
-            future: ref.watch(restaurantRepositoryProvider).paginate(),
-            builder: (context,
-                AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+    final data = ref.watch(restaurantProvider);
 
-              return ListView.separated(
-                itemCount: snapshot.data!.data.length,
-                itemBuilder: (_, index) {
-                  final pItem = snapshot.data!.data[index];
+    if (data.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => RestaurantDetailScreen(id: pItem.id),
-                        ),
-                      );
-                    },
-                    child: RestaurantCard.fromModel(model: pItem),
-                  );
-                },
-                separatorBuilder: (_, index) {
-                  return const SizedBox(height: 16.0);
-                },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        itemCount: data.length,
+        itemBuilder: (_, index) {
+          final pItem = data[index];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => RestaurantDetailScreen(id: pItem.id),
+                ),
               );
             },
-          ),
-        ),
+            child: RestaurantCard.fromModel(model: pItem),
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(height: 16.0);
+        },
       ),
     );
   }
