@@ -62,7 +62,7 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "\${price}",
+                  "\$$price",
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     color: PRIMARY_COLOR,
