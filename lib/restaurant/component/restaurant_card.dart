@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mark7/common/const/colors.dart';
+import 'package:mark7/restaurant/model/restaurant_detail_model.dart';
 import 'package:mark7/restaurant/model/restaurant_model.dart';
 
 class RestaurantCard extends StatelessWidget {
@@ -29,7 +30,6 @@ class RestaurantCard extends StatelessWidget {
   factory RestaurantCard.fromModel({
     required RestaurantModel model,
     bool isDetail = false,
-    String? detail,
   }) {
     return RestaurantCard(
       image: Image.network(
@@ -43,7 +43,7 @@ class RestaurantCard extends StatelessWidget {
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
       isDetail: isDetail,
-      detail: detail,
+      detail: model is RestaurantDetailModel ? model.detail : null,
     );
   }
 
@@ -51,12 +51,10 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isDetail) image,
-        if (!isDetail)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: image,
-          ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(isDetail ? 0 : 12.0),
+          child: image,
+        ),
         const SizedBox(height: 16),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: isDetail ? 16.0 : 0),

@@ -4,9 +4,10 @@ import 'package:mark7/common/layout/default_layout.dart';
 import 'package:mark7/product/component/product_card.dart';
 import 'package:mark7/restaurant/component/restaurant_card.dart';
 import 'package:mark7/restaurant/model/restaurant_detail_model.dart';
-import 'package:mark7/restaurant/repository/restaurant_repository.dart';
+import 'package:mark7/restaurant/model/restaurant_model.dart';
+import 'package:mark7/restaurant/provider/restaurant_provider.dart';
 
-class RestaurantDetailScreen extends ConsumerWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
 
   const RestaurantDetailScreen({
@@ -15,43 +16,50 @@ class RestaurantDetailScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantDetailScreen> createState() =>
+      _RestaurantDetailScreenState();
+}
+
+class _RestaurantDetailScreenState
+    extends ConsumerState<RestaurantDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the restaurant detail when the screen is initialized
+    ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(restaurantDetailProvider(widget.id));
+
+    if (state == null) {
+      return const DefaultLayout(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return DefaultLayout(
       title: 'Restaurant Detail',
-      child: FutureBuilder<RestaurantDetailModel>(
-        future:
-            ref.watch(restaurantRepositoryProvider).getRestaurantDetail(id: id),
-        builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }
-
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return CustomScrollView(
-            slivers: [
-              renderTop(snapshot.data!),
-              renderLabel(),
-              renderProduct(products: snapshot.data!.products),
-            ],
-          );
-        },
+      child: CustomScrollView(
+        slivers: [
+          renderTop(state),
+          if (state is RestaurantDetailModel) ...[
+            renderLabel(),
+            renderProduct(products: state.products),
+          ]
+        ],
       ),
     );
   }
 
-  SliverToBoxAdapter renderTop(RestaurantDetailModel model) {
+  SliverToBoxAdapter renderTop(RestaurantModel model) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
         model: model,
         isDetail: true,
-        detail: model.detail,
       ),
     );
   }

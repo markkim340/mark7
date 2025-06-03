@@ -1,7 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mark7/common/model/cursor_pagination_model.dart';
 import 'package:mark7/common/model/pagination_params.dart';
+import 'package:mark7/restaurant/model/restaurant_model.dart';
 import 'package:mark7/restaurant/repository/restaurant_repository.dart';
+
+final restaurantDetailProvider =
+    Provider.family<RestaurantModel?, String>((ref, id) {
+  final restaurantState = ref.watch(restaurantProvider);
+
+  if (restaurantState is! CursorPagination) {
+    return null;
+  }
+
+  return restaurantState.data.firstWhere((restaurant) => restaurant.id == id);
+});
 
 final restaurantProvider =
     StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>((ref) {
@@ -19,7 +31,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     paginate();
   }
 
-  void paginate({
+  Future<void> paginate({
     int fetchCount = 20,
     // Whether to fetch more data
     // true : fetch more data
@@ -103,5 +115,27 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       state = CursorPaginationError(message: e.toString());
       return;
     }
+  }
+
+  void getDetail({required String id}) async {
+    if (state is! CursorPagination) {
+      await paginate();
+    }
+
+    // Exception handling
+    if (state is! CursorPagination) {
+      return;
+    }
+
+    final pState = state as CursorPagination;
+    final resp = await repository.getRestaurantDetail(id: id);
+
+    state = pState.copyWith(
+      data: pState.data
+          .map<RestaurantModel>(
+            (el) => el.id == id ? resp : el,
+          )
+          .toList(),
+    );
   }
 }
