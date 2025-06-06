@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:mark7/common/layout/default_layout.dart';
 import 'package:mark7/product/component/product_card.dart';
 import 'package:mark7/restaurant/component/restaurant_card.dart';
@@ -46,11 +47,77 @@ class _RestaurantDetailScreenState
       child: CustomScrollView(
         slivers: [
           renderTop(state),
+          if (state is! RestaurantDetailModel) renderLoading(),
           if (state is RestaurantDetailModel) ...[
             renderLabel(),
             renderProduct(products: state.products),
           ]
         ],
+      ),
+    );
+  }
+
+  SliverPadding renderLoading() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 16.0,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: SkeletonParagraph(
+                style: const SkeletonParagraphStyle(
+                  padding: EdgeInsets.zero,
+                  lines: 6,
+                  spacing: 6.0,
+                  lineStyle: SkeletonLineStyle(
+                    height: 12.0,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                ),
+              ),
+            ),
+            ...List.generate(
+              3,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 22.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SkeletonAvatar(
+                      style: SkeletonAvatarStyle(
+                        width: 90.0,
+                        height: 90.0,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Expanded(
+                      child: SkeletonParagraph(
+                        style: const SkeletonParagraphStyle(
+                          padding: EdgeInsets.zero,
+                          lines: 5,
+                          spacing: 6.0,
+                          lineStyle: SkeletonLineStyle(
+                            height: 13.0,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
