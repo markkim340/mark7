@@ -9,7 +9,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'restaurant_rating_repository.g.dart';
 
-final restaurantRepositoryProvider =
+final restaurantRatingRepositoryProvider =
     Provider.family<RestaurantRatingRepository, String>(
   (ref, rid) {
     final dio = ref.watch(dioProvider);

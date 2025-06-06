@@ -10,7 +10,9 @@ class PaginationProvider<T extends IModelWithId,
   final R repository;
 
   PaginationProvider({required this.repository})
-      : super(CursorPaginationLoading());
+      : super(CursorPaginationLoading()) {
+    paginate(); // Initial fetch
+  }
 
   Future<void> paginate({
     int fetchCount = 20,
