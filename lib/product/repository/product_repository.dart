@@ -17,7 +17,8 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
 
 // http://$ip/product
 @RestApi()
-abstract class ProductRepository implements IBasePaginationRepository {
+abstract class ProductRepository
+    implements IBasePaginationRepository<ProductModel> {
   factory ProductRepository(Dio dio, {String baseUrl}) = _ProductRepository;
 
   @GET('/')
