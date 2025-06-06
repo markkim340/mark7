@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:mark7/common/layout/default_layout.dart';
 import 'package:mark7/product/component/product_card.dart';
+import 'package:mark7/rating/component/rating_card.dart';
 import 'package:mark7/restaurant/component/restaurant_card.dart';
 import 'package:mark7/restaurant/model/restaurant_detail_model.dart';
 import 'package:mark7/restaurant/model/restaurant_model.dart';
@@ -51,7 +52,20 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel) ...[
             renderLabel(),
             renderProduct(products: state.products),
-          ]
+          ],
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                avatarImage: AssetImage('asset/img/misc/sample.jpg'),
+                images: [],
+                rating: 4,
+                email: 'mark340@kakao.com',
+                content:
+                    'Great food and service! Highly recommend this restaurant.',
+              ),
+            ),
+          )
         ],
       ),
     );
