@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mark7/common/model/cursor_pagination_model.dart';
+import 'package:mark7/common/utils/pagination_utils.dart';
 import 'package:mark7/restaurant/component/restaurant_card.dart';
 import 'package:mark7/restaurant/provider/restaurant_provider.dart';
 import 'package:mark7/restaurant/view/restaurant_detail_screen.dart';
@@ -22,12 +23,10 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
   }
 
   void _scrollListener() {
-    // Check if the user has scrolled to the bottom of the list
-    if (_scrollController.offset >
-        _scrollController.position.maxScrollExtent - 300) {
-      // Fetch more data when the user reaches the end of the list
-      ref.read(restaurantProvider.notifier).paginate(fetchMore: true);
-    }
+    PaginationUtils.paginate(
+      controller: _scrollController,
+      provider: ref.read(restaurantProvider.notifier),
+    );
   }
 
   @override

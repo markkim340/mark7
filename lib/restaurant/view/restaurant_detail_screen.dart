@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:mark7/common/layout/default_layout.dart';
 import 'package:mark7/common/model/cursor_pagination_model.dart';
+import 'package:mark7/common/utils/pagination_utils.dart';
 import 'package:mark7/product/component/product_card.dart';
 import 'package:mark7/rating/component/rating_card.dart';
 import 'package:mark7/rating/model/rating_model.dart';
@@ -27,11 +28,20 @@ class RestaurantDetailScreen extends ConsumerStatefulWidget {
 
 class _RestaurantDetailScreenState
     extends ConsumerState<RestaurantDetailScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    // Fetch the restaurant detail when the screen is initialized
     ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    PaginationUtils.paginate(
+      controller: _scrollController,
+      provider: ref.read(restaurantRatingProvider(widget.id).notifier),
+    );
   }
 
   @override
@@ -50,6 +60,7 @@ class _RestaurantDetailScreenState
     return DefaultLayout(
       title: 'Restaurant Detail',
       child: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           renderTop(state),
           if (state is! RestaurantDetailModel) renderLoading(),
