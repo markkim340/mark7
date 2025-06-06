@@ -4,6 +4,7 @@ import 'package:mark7/common/const/data.dart';
 import 'package:mark7/common/dio/dio.dart';
 import 'package:mark7/common/model/cursor_pagination_model.dart';
 import 'package:mark7/common/model/pagination_params.dart';
+import 'package:mark7/common/repository/base_pagination_repository.dart';
 import 'package:mark7/restaurant/model/restaurant_detail_model.dart';
 import 'package:mark7/restaurant/model/restaurant_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -18,7 +19,8 @@ RestaurantRepository restaurantRepository(Ref ref) {
 }
 
 @RestApi()
-abstract class RestaurantRepository {
+abstract class RestaurantRepository
+    implements IBasePaginationRepository<RestaurantModel> {
   factory RestaurantRepository(Dio dio, {String baseUrl}) =
       _RestaurantRepository;
 
