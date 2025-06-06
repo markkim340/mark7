@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mark7/common/const/colors.dart';
 import 'package:mark7/common/layout/default_layout.dart';
+import 'package:mark7/product/view/product_tab.dart';
 import 'package:mark7/restaurant/view/restaurant_screen.dart';
 
 class RootTab extends StatefulWidget {
@@ -82,8 +83,8 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Search',
+                icon: Icon(Icons.restaurant),
+                label: 'Food',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -102,7 +103,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         controller: controller,
         children: const [
           RestaurantScreen(),
-          Center(child: Text('Search Tab')),
+          ProductTab(),
           Center(child: Text('Profile Tab')),
           Center(child: Text('Settings Tab')),
         ],

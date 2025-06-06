@@ -1,4 +1,4 @@
-abstract class IModelWithId<T> {
+abstract class IModelWithId {
   final String id;
 
   IModelWithId({
