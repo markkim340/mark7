@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mark7/common/model/cursor_pagination_model.dart';
 import 'package:mark7/common/model/model_with_id.dart';
@@ -94,7 +96,9 @@ class PaginationProvider<T extends IModelWithId,
       } else {
         state = resp;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print("PaginationProvider Error: $e");
+      print(stack);
       state = CursorPaginationError(message: e.toString());
       return;
     }

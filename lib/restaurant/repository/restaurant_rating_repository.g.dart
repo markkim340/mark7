@@ -25,7 +25,8 @@ class _RestaurantRatingRepository implements RestaurantRatingRepository {
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(paginationParams?.toJson() ?? <String, dynamic>{});
     queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'accessToken': true};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CursorPagination<RatingModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
