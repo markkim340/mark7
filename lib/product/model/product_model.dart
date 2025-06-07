@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mark7/common/model/model_with_id.dart';
+import 'package:mark7/common/utils/data_utils.dart';
 import 'package:mark7/restaurant/model/restaurant_model.dart';
 
 part 'product_model.g.dart';
@@ -9,7 +10,8 @@ class ProductModel implements IModelWithId {
   final String id;
   final String name;
   final String detail;
-  final String imageUrl;
+  @JsonKey(fromJson: DataUtils.pathToUrl)
+  final String imgUrl;
   final int price;
   final RestaurantModel restaurant;
 
@@ -17,7 +19,7 @@ class ProductModel implements IModelWithId {
     required this.id,
     required this.name,
     required this.detail,
-    required this.imageUrl,
+    required this.imgUrl,
     required this.price,
     required this.restaurant,
   });
