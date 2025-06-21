@@ -1,7 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:mark7/common/const/data.dart';
+import 'package:mark7/common/dio/dio.dart';
 import 'package:mark7/common/model/login_response.dart';
 import 'package:mark7/common/model/token_response.dart';
 import 'package:mark7/common/utils/data_utils.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+
+  return AuthRepository(
+    baseUrl: 'http://$ip/auth',
+    dio: dio,
+  );
+});
 
 class AuthRepository {
   /// http://$ip/auth
