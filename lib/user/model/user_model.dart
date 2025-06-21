@@ -8,7 +8,7 @@ abstract class UserModelBase {}
 class UserModelError extends UserModelBase {
   final String message;
 
-  UserModelError(this.message);
+  UserModelError({required this.message});
 }
 
 class UserModelLoading extends UserModelBase {}
