@@ -69,14 +69,14 @@ class CustomInterceptor extends Interceptor {
 
     // when 401 error occurs, try to refresh token
     final isStatus401 = err.response?.statusCode == 401;
-    final isPathRefresh = err.requestOptions.path == '/auth/refresh';
+    final isPathRefresh = err.requestOptions.path == '/auth/token';
 
     // If the error is 401 and the request is not for refreshing the token,
     if (isStatus401 && !isPathRefresh) {
       final dio = Dio();
       try {
         final resp = await dio.post(
-          'http://$ip/auth/refresh',
+          'http://$ip/auth/token',
           options: Options(
             headers: {
               'Authorization': 'Bearer $refreshToken',
