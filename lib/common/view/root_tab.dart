@@ -5,6 +5,8 @@ import 'package:mark7/product/view/product_screen.dart';
 import 'package:mark7/restaurant/view/restaurant_screen.dart';
 
 class RootTab extends StatefulWidget {
+  static const String routeName = 'home';
+
   const RootTab({super.key});
 
   @override
