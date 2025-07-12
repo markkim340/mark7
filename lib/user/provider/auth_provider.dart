@@ -34,6 +34,7 @@ class AuthProvider extends ChangeNotifier {
         routes: [
           GoRoute(
             path: 'restaurant/:rid',
+            name: RestaurantDetailScreen.routeName,
             builder: (context, state) => RestaurantDetailScreen(
               id: state.pathParameters['rid']!,
             ),
@@ -51,6 +52,10 @@ class AuthProvider extends ChangeNotifier {
         builder: (context, state) => const LoginScreen(),
       ),
     ];
+  }
+
+  void logout() {
+    ref.read(userMeProvider.notifier).logout();
   }
 
   /// Splash screen redirect logic

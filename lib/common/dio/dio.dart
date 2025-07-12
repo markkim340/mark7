@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mark7/common/const/data.dart';
 import 'package:mark7/common/storage/secure_storage.dart';
+import 'package:mark7/user/provider/auth_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio.g.dart';
@@ -14,15 +15,22 @@ Dio dio(Ref ref) {
   final dio = Dio();
   final storage = ref.watch(storageProvider);
 
-  dio.interceptors.add(CustomInterceptor(storage: storage));
+  dio.interceptors.add(CustomInterceptor(
+    storage: storage,
+    ref: ref,
+  ));
 
   return dio;
 }
 
 class CustomInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
+  final Ref ref;
 
-  CustomInterceptor({required this.storage});
+  CustomInterceptor({
+    required this.storage,
+    required this.ref,
+  });
 
   @override
   void onRequest(
@@ -98,6 +106,15 @@ class CustomInterceptor extends Interceptor {
         final response = await dio.fetch(options);
         return handler.resolve(response);
       } on DioException catch (e) {
+        // circular dependency error
+        // A, B
+        // A -> B
+        // B -> A
+        // A B  infinite loop occurs
+        // A -> B -> A -> B -> A -> B
+        // ump -> dio -> ump -> dio
+        ref.read(authProvider.notifier).logout();
+
         return handler.reject(e);
       }
     }

@@ -14,6 +14,8 @@ import 'package:mark7/restaurant/provider/restaurant_provider.dart';
 import 'package:mark7/restaurant/provider/restaurant_rating_provider.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'restaurantDetail';
+
   final String id;
 
   const RestaurantDetailScreen({
